@@ -25,9 +25,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--exp' , default='exp_1/') # Experiment name
 parser.add_argument('--epochs' , type = int,default=200) # Trainign epochs
 parser.add_argument('--batch_size', type = int, default=10) # batch size
-parser.add_argument('--save_model_interval', type = int, default=10) # checkpoint saving interval
 parser.add_argument('--lr', type = float,default=0.0001)
 parser.add_argument('--ckpt_folder', default="ckpt/")
+parser.add_argument('--ckpt_file', default='') # Saved chekpoint file to continue training
 parser.add_argument('--exp_details', default="First trail") # Further experiment detials to be saved in a text file
 parser.add_argument('--data_directory', default="data/") # directory where data is located
 parser.add_argument('--conv_only', action='store_true') # If set to true it doesn't use the dense layer at the end and only extracts conv features
@@ -41,11 +41,14 @@ batch_size = args.batch_size
 exp = args.exp
 data = args.data
 lr = args.lr
+ckpt_file = args.ckpt_file
 ckpt_folder = args.ckpt_folder
 exp_details = args.exp_details
 data_directory = args.data_directory
 conv_only = args.conv_only
-save_model_interval = args.save_model_interval
+sup_training = args.sup_training
+
+
 
 isExist = os.path.exists(ckpt_folder+exp)
 if not isExist:
@@ -100,7 +103,9 @@ class Model(nn.Module):
         return h, fin
 
 model = Model(conv_only = conv_only,  data= data )
-
+if ckpt_file:
+    model.load_state_dict(torch.load(ckpt_file))
+    model.eval()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
@@ -147,8 +152,8 @@ for Epoch in range(epochs):
         Labels = torch.arange(PosEmb11.shape[0])
         LossVal [ Epoch, val_step] = LossTr(torch.cat((PosEmb11, PosEmb12), dim = 0),torch.cat((Labels, Labels), dim = 0)).item()       
         torch.cuda.empty_cache()
-    if (Epoch + 1) % save_model_interval == 0 : 
-        torch.save(model.state_dict(), ckpt_folder+exp+'/model_'+ str(Epoch))
+
+    torch.save(model.state_dict(), ckpt_folder+exp+'/model_'+ str(Epoch))
     writer.add_scalar('Train/Loss', LossStats[ Epoch, :].mean(), Epoch)
     writer.add_scalar('Val/Loss', LossVal[ Epoch, :].mean(), Epoch)
 
