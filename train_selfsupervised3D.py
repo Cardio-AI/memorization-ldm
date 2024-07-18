@@ -22,7 +22,7 @@ from pytorch_metric_learning.losses import NTXentLoss
 from torch.utils.tensorboard import SummaryWriter
 #Arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--exp' , default='exp_1/') # Experiment name
+parser.add_argument('--exp' , default='exp_3D_1/') # Experiment name
 parser.add_argument('--epochs' , type = int,default=200) # Trainign epochs
 parser.add_argument('--batch_size', type = int, default=10) # batch size
 parser.add_argument('--save_model_interval', type = int, default=10) # checkpoint saving interval

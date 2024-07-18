@@ -1,4 +1,6 @@
 data/monai
 data/meddiff
+data/monai-2D
 
-ckpt/exp_journal
+ckpt/exp_2D
+ckpt/exp_3D
