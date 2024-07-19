@@ -29,9 +29,9 @@ parser.add_argument('--save_model_interval', type = int, default=10) # checkpoin
 parser.add_argument('--lr', type = float,default=0.0001)
 parser.add_argument('--ckpt_folder', default="ckpt/")
 parser.add_argument('--exp_details', default="First trail") # Further experiment detials to be saved in a text file
-parser.add_argument('--data_directory', default="data/") # directory where data is located
+parser.add_argument('--data_dir', default="data/") # directory where data is located
 parser.add_argument('--conv_only', action='store_true') # If set to true it doesn't use the dense layer at the end and only extracts conv features
-parser.add_argument('--data', type = str,default='mrnet', help ='which dataset' ) # which dataset, custom can be defined
+parser.add_argument('--dataset', type = str,default='mrnet', help ='which dataset' ) # which dataset, custom can be defined
 args = parser.parse_args()
 
 
@@ -39,11 +39,11 @@ args = parser.parse_args()
 epochs = args.epochs
 batch_size = args.batch_size
 exp = args.exp
-data = args.data
+data = args.dataset
 lr = args.lr
 ckpt_folder = args.ckpt_folder
 exp_details = args.exp_details
-data_directory = args.data_directory
+data_dir = args.data_dir
 conv_only = args.conv_only
 save_model_interval = args.save_model_interval
 
@@ -59,8 +59,8 @@ writer = SummaryWriter(log_dir= ckpt_folder+exp)
 
 #load dataset
 if data =='mrnet':
-    dataset = MRNetDatasetContrastivePairs(data_directory , task = 'acl', plane = 'sagittal',split='train')
-    dataset_val = MRNetDatasetContrastivePairs(data_directory , task = 'acl', plane = 'sagittal',split='valid')
+    dataset = MRNetDatasetContrastivePairs(data_dir , task = 'acl', plane = 'sagittal',split='train')
+    dataset_val = MRNetDatasetContrastivePairs(data_dir , task = 'acl', plane = 'sagittal',split='valid')
 
 #Data loaders
 train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=0, persistent_workers=False)
