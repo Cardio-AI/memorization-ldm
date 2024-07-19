@@ -39,6 +39,7 @@ class SiameseNetwork(nn.Module):
 
     def forward(self, input1 = None, input2= None, resnet_only = False):
         if resnet_only == True:
+
             return self.model(input1)
         else:    
             # Forward
